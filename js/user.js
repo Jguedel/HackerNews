@@ -22,7 +22,7 @@ async function signup(evt) {
   const name = $("#signup-name").val();
   const username = $("#signup-username").val();
   const password = $("#signup-password").val();
-  currentUser = await User.signup(username, password, name)
+  currentUser = await User.signup(username, password, name);
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
   $signupForm.trigger("reset");

@@ -9,22 +9,29 @@ async function getAndShowStoriesOnStart() {
 }
 
 // TURN SINGLE STORY DATA POINT INTO LIST ITEM
-function generateStoryMarkup(story,trash = '') {
-  let temp = story.url.slice(8)
-  const endStr = temp.split('').indexOf('/')
-  const hostName = temp.slice(0,endStr)
-  let star =''
-  if(currentUser !== undefined){
-    star = getStarHTML(story, currentUser)
+function generateStoryMarkup(story, trash = "") {
+  console.log(`original url: ${story.url}`);
+  let hostName = story.url;
+  let slicePos = hostName.split("").indexOf("/");
+  hostName = hostName.slice(slicePos + 2);
+  console.log(`first slice: ${hostName}`);
+  slicePos = hostName.split("").indexOf("/");
+  if (slicePos != -1) {
+    hostName = hostName.slice(0, slicePos);
+    console.log(`second slice: ${hostName}`);
   }
-  if(trash === true){
-    trash =   `
+
+  let star = "";
+  if (currentUser !== undefined) {
+    star = getStarHTML(story, currentUser);
+  }
+  if (trash === true) {
+    trash = `
         <span class="trash-can">
           <i class="fas fa-trash-alt del"></i>
-        </span> `
-  }
-  else{
-    trash =''
+        </span> `;
+  } else {
+    trash = "";
   }
   return $(`
       <li id="${story.storyId}">
@@ -65,7 +72,7 @@ function putStoriesOnPage() {
 function getMyStories() {
   $("#yourStory").empty();
   for (let story of currentUser.ownStories) {
-    const $story = generateStoryMarkup(story,true);
+    const $story = generateStoryMarkup(story, true);
     $("#yourStory").append($story);
   }
   $(".starFav").on("click", favoriteToggle);
@@ -93,13 +100,13 @@ async function favoriteToggle(e) {
   e.preventDefault();
   const id = e.target.parentElement.parentElement.id;
   const token = currentUser.loginToken;
-  let add = "far"
-  let rem = 'fas'
-  let meth = 'DELETE'
-  if(e.target.classList.contains("far") === true) {
-    rem = "far"
-    add = 'fas'
-    meth = 'POST'
+  let add = "far";
+  let rem = "fas";
+  let meth = "DELETE";
+  if (e.target.classList.contains("far") === true) {
+    rem = "far";
+    add = "fas";
+    meth = "POST";
   }
   e.target.classList.add(add);
   e.target.classList.remove(rem);
